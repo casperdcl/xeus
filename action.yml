@@ -1,0 +1,65 @@
+name: jupyterlite-xeus-pages
+description: Serve interactive notebooks via JupyterLite Xeus
+inputs:
+  environment-file:
+    description: Path to xeus environment.yml as per https://jupyterlite-xeus.readthedocs.io/en/latest/environment.html
+    default: environment.yml
+  build-src:
+    description: Source directory (--lite-path)
+    default: .
+  base-url:
+    description: Base URL prefix (--base-url)
+    default: /
+  contents:
+    description: Path (--contents) as per https://jupyterlite.readthedocs.io/en/stable/howto/content/files.html
+    default: files
+  build-python-version:
+    description: Python version to use for the build
+    default: '3.x'
+  build-dst:
+    description: Output directory
+    default: _site
+  build-environment:
+    description: Build environment as per https://github.com/jupyterlite/xeus-lite-demo/blob/main/.github/build-environment.yml
+    default: |
+      channels:
+        - conda-forge
+      dependencies:
+        - python
+        - pip
+        - jupyter_server
+        - jupyterlite-core >=0.7
+        - jupyterlite-xeus >=4.3
+        - notebook >=7.5
+runs:
+  using: composite
+  steps:
+  - uses: actions/setup-python@v5
+    with:
+      python-version: ${{ inputs.build-python-version }}
+  - name: create build-environment.yml
+    run: |
+      cat << EOF > ${{ github.action_path }}/build-environment.yml
+      name: build-env
+      ${{ inputs.build-environment }}
+      EOF
+    shell: bash
+  - uses: mamba-org/setup-micromamba@v3
+    with:
+      environment-file: ${{ github.action_path }}/build-environment.yml
+      cache-environment: true
+  - name: jupyter lite build
+    run: >
+      jupyter lite build
+      --XeusAddon.environment_file=${{ inputs.environment-file }}
+      --lite-dir ${{ inputs.build-src }}
+      $(test -d ${{ inputs.contents }} && echo "--contents ${{ inputs.contents }}" || :)
+      --base-url ${{ inputs.base-url }}
+      --output-dir ${{ inputs.build-dst }}
+    shell: bash -el {0}
+  - uses: actions/upload-pages-artifact@v5
+    with:
+      path: ${{ inputs.build-dst }}
+branding:
+  icon: globe
+  color: yellow
