@@ -31,6 +31,8 @@ inputs:
         - jupyterlite-core >=0.7
         - jupyterlite-xeus >=4.3
         - notebook >=7.5
+        - pip:
+          - jupyterlab-open-url-parameter # https://jupyterlite.readthedocs.io/en/stable/howto/content/open-url-parameter.html
 runs:
   using: composite
   steps:
