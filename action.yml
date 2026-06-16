@@ -33,6 +33,9 @@ inputs:
         - notebook >=7.5
         - pip:
           - jupyterlab-open-url-parameter # https://jupyterlite.readthedocs.io/en/stable/howto/content/open-url-parameter.html
+  build-extra-args:
+    description: Extra arguments to pass to jupyter lite build
+    default: ''
 runs:
   using: composite
   steps:
@@ -58,6 +61,7 @@ runs:
       $(test -d ${{ inputs.contents }} && echo "--contents ${{ inputs.contents }}" || :)
       --base-url ${{ inputs.base-url }}
       --output-dir ${{ inputs.build-dst }}
+      ${{ inputs.build-extra-args }}
     shell: bash -el {0}
   - uses: actions/upload-pages-artifact@v5
     with:
