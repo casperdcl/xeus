@@ -41,14 +41,14 @@ runs:
       python-version: ${{ inputs.build-python-version }}
   - name: create build-environment.yml
     run: |
-      cat << EOF > ${{ github.action_path }}/build-environment.yml
+      cat << EOF > ${{ runner.temp }}/build-environment.yml
       name: build-env
       ${{ inputs.build-environment }}
       EOF
     shell: bash
   - uses: mamba-org/setup-micromamba@v3
     with:
-      environment-file: ${{ github.action_path }}/build-environment.yml
+      environment-file: ${{ runner.temp }}/build-environment.yml
       cache-environment: true
   - name: jupyter lite build
     run: >
