@@ -2,10 +2,10 @@ name: jupyterlite-xeus-pages
 description: Serve interactive notebooks via JupyterLite Xeus
 inputs:
   environment-file:
-    description: Path to xeus environment.yml as per https://jupyterlite-xeus.readthedocs.io/en/latest/environment.html
+    description: File (--XeusAddon.environment_file) as per https://jupyterlite-xeus.readthedocs.io/en/latest/environment.html and https://github.com/jupyterlite/xeus-lite-demo#-how-to-install-kernels-and-packages
     default: environment.yml
   build-src:
-    description: Source directory (--lite-path)
+    description: Source directory (--lite-dir) as per https://jupyterlite.readthedocs.io/en/stable/reference/cli.html#well-known-files
     default: .
   base-url:
     description: Base URL prefix (--base-url)
